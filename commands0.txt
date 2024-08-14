@@ -1,0 +1,5 @@
+python 1_initial_samples_arguments.py --dim 7 --iter 0 --labels M9_7F_labels.csv --samplesper 7 --big --batches 6
+python 2_48_well_exp_design_arguments.py component_data_M9_space.csv M9_rack_codes.csv M9_reference_samples.csv --iteration 0 --dim 7 --maxvol 80 --maxwell 800
+python 3_volumes_tube_stock_arguments.py --dim 7 --iteration 0 --voltube 2000 --maxwell 800 --maxvol 80 --stock stock_table_M9.csv --medium M9_preparation.csv --space component_data_M9_space.csv
+python 4_making_stock_opentrons_arguments.py --iteration 0 --rackdata M9_rack_codes_all.csv --bigdata M9_big_codes.csv
+

@@ -1,0 +1,8 @@
+Component,Min_Conc,Max_Conc,Stock_Conc
+Glucose,0,4.0,40
+NH4Cl,0,240.0,2400
+MgSO4,0,2.0,20
+KH2PO4,0,50.0,500
+Na2HPO4,0,50.0,500
+CaCl2,0,0.2,2
+NaCl,0,50,500

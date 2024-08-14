@@ -1,0 +1,8 @@
+compound,max_vol,min_concentration_mM,max_concentration_mM,max_stock_mM
+Glucose,80,0,4.0,40.0
+NH4Cl,80,0,240.0,2400.0
+MgSO4,80,0,2.0,20.0
+KH2PO4,80,0,50.0,500.0
+Na2HPO4,80,0,50.0,500.0
+CaCl2,80,0,0.2,2.0
+NaCl,80,0,50.0,500.0
