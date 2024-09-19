@@ -2,17 +2,15 @@
 # coding: utf-8
 
 import os
-import torch
 import random
 import numpy as np
 import pandas as pd
 import argparse
-from scipy.stats import qmc  # For Sobol and LHS sampling
+from scipy.stats import qmc  # Sobol and LHS from scipy
 
 # Argument parsing
 parser = argparse.ArgumentParser(description="Initial design script")
 parser.add_argument("--dim", type=int, required=True, default=2, help="Number of dimensions")
-parser.add_argument("--iter", type=int, help="Iteration number (not required if --big is activated)")
 parser.add_argument("--labels", type=str, required=True, default="1", help="Column labels file")
 parser.add_argument("--samplesper", required=True, type=int, default=7, help="Samples per iteration")
 parser.add_argument("--big", action="store_true", help="Flag for large experiment")
@@ -28,11 +26,12 @@ if args.big and args.batches is None:
 dim = args.dim
 col_labels = args.labels
 init_samples = args.samplesper
-iteration = args.iter if not args.big else 0  # Default iteration to 0 when --big is activated
+iteration = 0  # Default iteration to 0
 
 # Adjust samples for big experiment
 if args.big:
     init_samples *= args.batches
+    samples_per_batch = args.samplesper
 
 # Create necessary directories
 for directory in ["samples", "samples_runned", "raw_data", "opentrons_scripts",
@@ -40,17 +39,17 @@ for directory in ["samples", "samples_runned", "raw_data", "opentrons_scripts",
                   "color_tables", "tube_stock", "growth_data"]:
     os.makedirs(directory, exist_ok=True)
 
-# Sampling using scipy for both sobol and lhs
+# Sampling
 if args.method == "sobol":
-    # Sobol sampling using scipy
-    sobol_sampler = qmc.Sobol(d=dim, scramble=True)
+    # Using scipy's Sobol sampler
+    sobol_sampler = qmc.Sobol(d=dim, scramble=False)
     samples = sobol_sampler.random(n=init_samples)
 else:  # LHS method
-    # LHS sampling using scipy
+    # Using scipy's Latin Hypercube sampler
     lhs_sampler = qmc.LatinHypercube(d=dim)
     samples = lhs_sampler.random(n=init_samples)
 
-# Convert samples to DataFrame
+# Load labels and check if they match the number of dimensions
 labels_df = pd.read_csv(col_labels)
 col_labels_list = labels_df["Component"].to_list()
 
@@ -66,7 +65,7 @@ if args.big:
 
     # Randomize and assign batches
     samples_df = pd.read_csv("samples/samples_space_fill.csv")
-    samples_df["batch"] = random.sample([str(i) for i in range(args.batches)] * 7, len(samples_df))
+    samples_df["batch"] = random.sample([str(i) for i in range(args.batches)] * samples_per_batch, len(samples_df))
 
     # Save batch files based on batch number
     for bnum in samples_df["batch"].unique():
